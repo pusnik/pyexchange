@@ -726,6 +726,17 @@ class Exchange2010CalendarEvent(BaseExchangeCalendarEvent):
       {
         u'xpath': u'//m:Items/t:CalendarItem/t:Recurrence/t:WeeklyRecurrence/t:DaysOfWeek',
       },
+      u'sensitivity':
+      {
+        u'xpath': u'//m:Items/t:CalendarItem/t:Sensitivity',
+      },
+      u'is_cancelled':
+      {
+        u'xpath': u'//m:Items/t:CalendarItem/t:IsCancelled',
+        u'cast': u'bool',
+      },
+
+
     }
 
     result = self.service._xpath_to_dict(element=response, property_map=property_map, namespace_map=soap_request.NAMESPACES)
