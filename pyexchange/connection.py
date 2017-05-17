@@ -18,7 +18,7 @@ log = logging.getLogger('pyexchange')
 class ExchangeBaseConnection(object):
   """ Base class for Exchange connections."""
 
-  def send(self, body, headers=None, retries=2, timeout=30, encoding="utf-8"):
+  def send(self, body, headers=None, retries=2, timeout=30):
     raise NotImplementedError
 
 
@@ -57,7 +57,7 @@ class ExchangeNTLMAuthConnection(ExchangeBaseConnection):
 
     return self.session
 
-  def send(self, body, headers=None, retries=2, timeout=30, encoding=u"utf-8"):
+  def send(self, body, headers=None, retries=2, timeout=30):
     if not self.session:
       self.session = self.build_session()
 
@@ -65,14 +65,14 @@ class ExchangeNTLMAuthConnection(ExchangeBaseConnection):
       response = self.session.post(self.url, data=body, headers=headers, verify = self.verify_certificate)
       response.raise_for_status()
     except requests.exceptions.RequestException as err:
-      log.debug(err.response.content)
+      log.debug(getattr(err.response, 'content', 'No response.'))
       raise FailedExchangeException(u'Unable to connect to Exchange with NTLM: %s' % err)
 
     log.info(u'Got response: {code}'.format(code=response.status_code))
     log.debug(u'Got response headers: {headers}'.format(headers=response.headers))
     log.debug(u'Got body: {body}'.format(body=response.text))
 
-    return response.text
+    return response.content
 
 
 class ExchangeBasicAuthConnection(ExchangeBaseConnection):
@@ -110,7 +110,7 @@ class ExchangeBasicAuthConnection(ExchangeBaseConnection):
 
     return self.session
 
-  def send(self, body, headers=None, retries=2, timeout=30, encoding=u"utf-8"):
+  def send(self, body, headers=None, retries=2, timeout=30):
     if not self.session:
       self.session = self.build_session()
 
@@ -125,4 +125,4 @@ class ExchangeBasicAuthConnection(ExchangeBaseConnection):
     log.debug(u'Got response headers: {headers}'.format(headers=response.headers))
     log.debug(u'Got body: {body}'.format(body=response.text))
 
-    return response.text
+    return response.content
