@@ -39,6 +39,12 @@ class ExchangeInternalServerTransientErrorException(FailedExchangeException):
   pass
 
 
+class ExchangeMailboxNotFoundException(FailedExchangeException):
+  """Raised when the mailbox is not found"""
+  pass
+
+
 class InvalidEventType(Exception):
   """Raised when a method for an event gets called on the wrong type of event."""
   pass
+
